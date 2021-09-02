@@ -96,7 +96,7 @@ class UserController extends Controller
             return response()->json($response, Response::HTTP_OK);
         } catch (QueryException $e) {
             return response()->json([
-                "message" => "Error : " . $e
+                "message" => "Error : " . $e->errorInfo
             ]);
         }
     }
@@ -109,6 +109,18 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::findOrFail($id);
+
+        try {
+            $user->delete();
+            $response = [
+                "message" => "User deleted"
+            ];
+            return response()->json($response, Response::HTTP_OK);
+        } catch (QueryException $e) {
+            return response()->json([
+                "message" => "Error : " . $e->errorInfo
+            ]);
+        }
     }
 }
